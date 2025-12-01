@@ -16,7 +16,9 @@ export const TrackTable = () => {
         <TableHeader>
           <TableRow>
             {columns.map((column) => (
-              <TableHead className="w-[100px]">{column.id}</TableHead>
+              <TableHead key={column.id} className="w-[100px]">
+                {column.id}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
