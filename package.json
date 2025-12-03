@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
+    "@graphql-codegen/typed-document-node": "^6.1.4",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tooltip": "^1.2.8",
@@ -39,6 +41,10 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.15.1",
+    "@graphql-codegen/cli": "^6.1.0",
+    "@graphql-codegen/schema-ast": "^5.0.0",
+    "@parcel/watcher": "^2.5.1",
     "@tanstack/eslint-config": "^0.3.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
