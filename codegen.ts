@@ -1,21 +1,13 @@
 import type { CodegenConfig } from "@graphql-codegen/cli"
 
 const config: CodegenConfig = {
-  schema: "https://graphql.org/graphql/",
+  schema: "src/server/graphql/schema.ts",
   documents: ["src/**/*.{ts,tsx}"],
   ignoreNoDocuments: true,
   generates: {
     "./src/graphql/": {
       preset: "client",
-      config: {
-        documentMode: "string"
-      }
-    },
-    "./schema.graphql": {
-      plugins: ["schema-ast"],
-      config: {
-        includeDirectives: true
-      }
+      config: { documentMode: "string" }
     }
   }
 }
