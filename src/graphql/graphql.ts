@@ -15,9 +15,44 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Album = {
+  __typename?: 'Album';
+  cover?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type Artist = {
+  __typename?: 'Artist';
+  biography?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  picture?: Maybe<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   _health: Scalars['String']['output'];
+  searchTrack: Array<Track>;
+};
+
+
+export type QuerySearchTrackArgs = {
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+  query: Scalars['String']['input'];
+};
+
+export type Track = {
+  __typename?: 'Track';
+  album: Album;
+  artist: Artist;
+  durant?: Maybe<Scalars['Int']['output']>;
+  explicit_lyrics?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  preview?: Maybe<Scalars['String']['output']>;
+  rank?: Maybe<Scalars['Int']['output']>;
+  title: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export class TypedDocumentString<TResult, TVariables>
