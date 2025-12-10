@@ -9,13 +9,13 @@ export const Route = createFileRoute("/api/graphql")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        let body: { query: string }
-        try {
-          body = await request.json()
+        const body = await request.json()
 
+        try {
           const result = await graphql({
             schema,
             source: body.query,
+            variableValues: body.variables,
             rootValue: resolvers
           })
 
