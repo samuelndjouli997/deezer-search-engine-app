@@ -1,3 +1,5 @@
+import { DeezerSearchResponseSchema } from "@/server/parsers/deezer.parser"
+
 export const searchDeezerTrack = async ({
   query,
   limit,
@@ -18,7 +20,9 @@ export const searchDeezerTrack = async ({
 
     const json = await response.json()
 
-    return json
+    const parsedJson = DeezerSearchResponseSchema.parse(json)
+
+    return parsedJson.data
   } catch (error) {
     console.error(error)
     throw error
