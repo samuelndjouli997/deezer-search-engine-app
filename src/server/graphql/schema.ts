@@ -16,7 +16,7 @@ export const typeDefs = `
     title: String!
     artist: Artist!
     album: Album!
-    durant: Int
+    duration: Int
     explicit_lyrics: Boolean
     type: String!
     preview: String
@@ -25,6 +25,6 @@ export const typeDefs = `
 
     type Query {
         _health: String! 
-        searchTrack(query: String!, limit: Int!, offset: Int!): [Track!]!
+        searchTrack(query: String!, limit: Int!, index: Int!): [Track!]!
     }
 `

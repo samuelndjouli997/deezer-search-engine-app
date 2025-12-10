@@ -37,8 +37,8 @@ export type Query = {
 
 
 export type QuerySearchTrackArgs = {
+  index: Scalars['Int']['input'];
   limit: Scalars['Int']['input'];
-  offset: Scalars['Int']['input'];
   query: Scalars['String']['input'];
 };
 
