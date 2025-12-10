@@ -6,10 +6,16 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { tracks } from "@/constants/data"
 import { columns } from "@/components/table/track/track-columns"
+import { useSearchTrack } from "@/hooks/use-search-tracks"
 
 export const TrackTable = () => {
+  const { data: tracks, isLoading, error } = useSearchTrack()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+  if (!tracks) return <div>Search for tracks...</div>
+
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
