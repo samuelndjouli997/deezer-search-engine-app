@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -46,7 +47,7 @@ export type Track = {
   __typename?: 'Track';
   album: Album;
   artist: Artist;
-  durant?: Maybe<Scalars['Int']['output']>;
+  duration?: Maybe<Scalars['Int']['output']>;
   explicit_lyrics?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['ID']['output'];
   preview?: Maybe<Scalars['String']['output']>;
@@ -54,6 +55,15 @@ export type Track = {
   title: Scalars['String']['output'];
   type: Scalars['String']['output'];
 };
+
+export type SearchTrackQueryQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+  index: Scalars['Int']['input'];
+}>;
+
+
+export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration?: number | null, rank?: number | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title?: string | null } }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -73,3 +83,21 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
+
+export const SearchTrackQueryDocument = new TypedDocumentString(`
+    query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {
+  searchTrack(query: $query, limit: $limit, index: $index) {
+    id
+    title
+    duration
+    rank
+    artist {
+      id
+      name
+    }
+    album {
+      title
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<SearchTrackQueryQuery, SearchTrackQueryQueryVariables>;
