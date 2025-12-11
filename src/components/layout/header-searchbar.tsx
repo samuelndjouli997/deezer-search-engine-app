@@ -1,35 +1,26 @@
-import { Search } from "lucide-react"
-import { useNavigate, useSearch } from "@tanstack/react-router"
+import { Loader2, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { useDebouncedValue } from "@/hooks/use-debounced-value"
 
 export const HeaderSearchbar = () => {
-  const navigate = useNavigate()
-
-  const search = useSearch({ from: "/" })
-
-  const handleSearch = (value: string) => {
-    navigate({
-      to: "/",
-      search: {
-        query: value,
-        index: 0,
-        limit: 10
-      }
-    })
-  }
+  const { inputValue, setInputValue, isDebouncing } = useDebouncedValue()
 
   return (
-    <div className="relative lg:min-w-86">
+    <div data-state={isDebouncing} className="relative lg:min-w-86">
       <Input
-        defaultValue={search.query ?? ""}
+        value={inputValue}
         id="search"
         className="ps-9"
         placeholder="Search for songs..."
         type="search"
-        onChange={(e) => handleSearch(e.currentTarget.value)}
+        onChange={(e) => setInputValue(e.currentTarget.value)}
       />
       <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-muted-foreground/80 peer-disabled:opacity-50">
-        <Search size={16} strokeWidth={2} />
+        {isDebouncing ? (
+          <Loader2 size={16} className="animate-spin" />
+        ) : (
+          <Search size={16} strokeWidth={2} />
+        )}
       </div>
     </div>
   )
