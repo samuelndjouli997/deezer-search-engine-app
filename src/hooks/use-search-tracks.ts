@@ -10,12 +10,14 @@ const SEARCH_TRACKS_QUERY = graphql(`
       title
       duration
       rank
+      explicit_lyrics
       artist {
         id
         name
       }
       album {
         title
+        cover
       }
     }
   }

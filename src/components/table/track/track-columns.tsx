@@ -1,35 +1,104 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { Track } from "@/types/Track"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 
-export const columns: ColumnDef<Track>[] = [
+import { SearchTrackQueryQuery } from "@/graphql/graphql"
+import { ColumnDef } from "@tanstack/react-table"
+
+export type TrackFromQuery = SearchTrackQueryQuery["searchTrack"][number]
+
+export const columns: ColumnDef<TrackFromQuery>[] = [
   {
     id: "title",
     accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => <span>{row.original.title}</span>
+    header: ({ column }) => (
+      <button
+        className="flex gap-1 items-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Title
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp size={16} />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown size={16} />
+        ) : (
+          <ArrowUpDown size={16} />
+        )}
+      </button>
+    ),
+    cell: ({ row }) => {
+      const { title, album, artist } = row.original
+
+      return (
+        <div className="flex items-center space-x-2">
+          <img
+            src={album.cover ?? ""}
+            className="w-10 h-10 rounded-md"
+            alt={`${album.title} par ${artist.name}`}
+          />
+          <p className="font-semibold">{title}</p>
+          {row.original.explicit_lyrics && (
+            <span className="text-[10px] bg-gray-600 text-white/60 px-1 rounded">
+              E
+            </span>
+          )}
+        </div>
+      )
+    },
+    enableSorting: true
   },
   {
     id: "artist",
     accessorKey: "artist",
-    header: "Artist",
-    cell: ({ row }) => <span>{row.original.artist.name}</span>
+    header: ({ column }) => (
+      <button
+        className="flex gap-1 items-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Artist
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp size={16} />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown size={16} />
+        ) : (
+          <ArrowUpDown size={16} />
+        )}
+      </button>
+    ),
+    cell: ({ row }) => <span>{row.original.artist.name}</span>,
+    enableSorting: true
   },
   {
     id: "album",
     accessorKey: "album",
-    header: "Album",
-    cell: ({ row }) => <span>{row.original.album.title}</span>
+    header: ({ column }) => (
+      <button
+        className="flex gap-1 items-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Album
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp size={16} />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown size={16} />
+        ) : (
+          <ArrowUpDown size={16} />
+        )}
+      </button>
+    ),
+    cell: ({ row }) => <span>{row.original.album.title}</span>,
+    enableSorting: true
   },
   {
     id: "duration",
     accessorKey: "duration",
     header: "Duration",
-    cell: ({ row }) => <span>{row.original.duration}</span>
+    cell: ({ row }) => <span>{row.original.duration}</span>,
+    enableSorting: true
   },
   {
     id: "rank",
     accessorKey: "rank",
     header: "Rank",
-    cell: ({ row }) => <span>{row.original.rank}</span>
+    cell: ({ row }) => <span>{row.original.rank}</span>,
+    enableSorting: true
   }
 ]
