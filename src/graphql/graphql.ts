@@ -63,7 +63,7 @@ export type SearchTrackQueryQueryVariables = Exact<{
 }>;
 
 
-export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration?: number | null, rank?: number | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title?: string | null } }> };
+export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration?: number | null, rank?: number | null, explicit_lyrics?: boolean | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title?: string | null, cover?: string | null } }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -91,12 +91,14 @@ export const SearchTrackQueryDocument = new TypedDocumentString(`
     title
     duration
     rank
+    explicit_lyrics
     artist {
       id
       name
     }
     album {
       title
+      cover
     }
   }
 }
