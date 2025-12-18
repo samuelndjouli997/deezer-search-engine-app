@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
-
-import { SearchTrackQueryQuery } from "@/graphql/graphql"
 import { ColumnDef } from "@tanstack/react-table"
+import { SearchTrackQueryQuery } from "@/graphql/graphql"
+import { truncateStr } from "@/utils/string"
 
 export type TrackFromQuery = SearchTrackQueryQuery["searchTrack"][number]
 
@@ -28,13 +28,13 @@ export const columns: ColumnDef<TrackFromQuery>[] = [
       const { title, album, artist } = row.original
 
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex max-w-40 items-center space-x-2">
           <img
             src={album.cover ?? ""}
             className="w-10 h-10 rounded-md"
             alt={`${album.title} par ${artist.name}`}
           />
-          <p className="font-semibold">{title}</p>
+          <p className="font-semibold">{truncateStr(title, 40)}</p>
           {row.original.explicit_lyrics && (
             <span className="text-[10px] bg-gray-600 text-white/60 px-1 rounded">
               E
@@ -63,7 +63,7 @@ export const columns: ColumnDef<TrackFromQuery>[] = [
         )}
       </button>
     ),
-    cell: ({ row }) => <span>{row.original.artist.name}</span>,
+    cell: ({ row }) => <span>{truncateStr(row.original.artist.name, 35)}</span>,
     enableSorting: true
   },
   {
@@ -84,7 +84,11 @@ export const columns: ColumnDef<TrackFromQuery>[] = [
         )}
       </button>
     ),
-    cell: ({ row }) => <span>{row.original.album.title}</span>,
+    cell: ({ row }) => (
+      <span className="max-w-34 block">
+        {truncateStr(row.original.album.title, 40)}
+      </span>
+    ),
     enableSorting: true
   },
   {
