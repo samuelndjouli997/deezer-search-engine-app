@@ -8,8 +8,7 @@ import { columns } from "@/components/table/track/track-columns"
 
 const searchSchema = z.object({
   query: z.string().optional(),
-  limit: z.number().optional(),
-  index: z.number().optional()
+  limit: z.number().optional()
 })
 
 export const Route = createFileRoute("/")({
@@ -18,7 +17,16 @@ export const Route = createFileRoute("/")({
 })
 
 function App() {
-  const { data, isLoading, error } = useSearchTrack()
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useSearchTrack()
+
+  const allTracks = data?.pages.flat() ?? []
 
   if (isLoading) {
     return (
@@ -40,7 +48,7 @@ function App() {
     )
   }
 
-  if (!data || data.length === 0) {
+  if (allTracks.length === 0) {
     return (
       <DefaultLayout>
         <div className="text-center py-12 text-muted-foreground">
@@ -52,7 +60,13 @@ function App() {
 
   return (
     <DefaultLayout>
-      <TrackTable columns={columns} data={data} />
+      <TrackTable
+        columns={columns}
+        data={allTracks}
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
     </DefaultLayout>
   )
 }

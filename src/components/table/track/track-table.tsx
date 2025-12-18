@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Loader2 } from "lucide-react"
 import { useState } from "react"
 import {
   ColumnDef,
@@ -6,7 +6,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   RowSelectionState,
   SortingState,
@@ -28,21 +27,34 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { fuzzyFilter } from "@/utils/filter"
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  fetchNextPage: () => void
+  hasNextPage: boolean
+  isFetchingNextPage: boolean
 }
 
 export const TrackTable = <TData, TValue>({
   columns,
-  data
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage
 }: Props<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+
+  const { scrollRef, sentinelRef } = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  })
 
   const table = useReactTable({
     data,
@@ -50,7 +62,6 @@ export const TrackTable = <TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -90,9 +101,12 @@ export const TrackTable = <TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border overflow-auto max-h-[50vh]">
+      <div
+        ref={scrollRef}
+        className="rounded-md border overflow-auto max-h-[70vh]"
+      >
         <Table className="min-w-full">
-          <TableHeader className="sticky">
+          <TableHeader className="sticky top-0 z-10 bg-background border-b">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -110,26 +124,46 @@ export const TrackTable = <TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+              <>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+                <TableRow ref={sentinelRef}>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-20 text-center"
+                  >
+                    {isFetchingNextPage ? (
+                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    ) : hasNextPage ? (
+                      <span className="text-xs text-muted-foreground">
+                        Loading more...
+                      </span>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">
+                        No more results!
+                      </span>
+                    )}
+                  </TableCell>
                 </TableRow>
-              ))
+              </>
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length}>
-                  <div className="flex items-center justify-center py-4 text-sm text-gray-500 dark:text-gray-400">
-                    Pas de résultats 💜
+                  <div className="flex items-center justify-center py-4 text-sm text-muted-foreground">
+                    No results 💜
                   </div>
                 </TableCell>
               </TableRow>

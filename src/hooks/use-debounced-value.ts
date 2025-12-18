@@ -14,9 +14,7 @@ export const useDebouncedValue = () => {
     navigate({
       to: "/",
       search: {
-        query: debouncedValue,
-        index: 0,
-        limit: 10
+        query: debouncedValue || undefined
       },
       replace: true
     })
