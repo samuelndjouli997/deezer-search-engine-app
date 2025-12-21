@@ -135,4 +135,12 @@ code {
   body {
     @apply bg-background text-foreground;
   }
+
+  .hero-title {
+    @apply bg-clip-text min-h-16 text-transparent bg-linear-to-br from-white to-[#52525B] text-3xl lg:text-6xl font-bold text-center;
+  }
+
+  .hero-subtitle {
+    @apply text-center text-lg font-semibold text-foreground/70;
+  }
 }
