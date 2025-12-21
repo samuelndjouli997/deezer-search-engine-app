@@ -1,7 +1,4 @@
-export const truncateStr = (
-  text: string | null | undefined,
-  maxLength: number = 30
-) => {
+export const truncateStr = (text: string, maxLength: number = 30) => {
   if (!text) return "-"
   if (text.length <= maxLength) return text
 
