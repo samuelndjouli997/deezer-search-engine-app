@@ -1,7 +1,4 @@
-import {
-  fetchTopArtists,
-  searchDeezerTrack
-} from "@/server/services/deezer.service"
+import { fetchTopArtists, searchDeezerTrack } from "@/server/services"
 import { randomizeItems } from "@/utils/filter"
 
 type Args = {

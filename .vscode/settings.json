@@ -16,5 +16,12 @@
     "**/routeTree.gen.ts": true
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  "workbench.editor.labelFormat": "medium",
+  "material-icon-theme.files.associations": {
+    "*.services.ts": "typescript",
+    "*.resolvers.ts": "typescript",
+    "*.parser.ts": "typescript"
+  }
 }
