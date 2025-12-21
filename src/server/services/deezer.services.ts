@@ -2,7 +2,7 @@ import z from "zod"
 import {
   ChartArtistResponseSchema,
   DeezerSearchResponseSchema
-} from "@/server/parsers/deezer.parser"
+} from "@/server/parsers"
 
 type SearchDeezerTrackProps = {
   query: string
@@ -36,6 +36,7 @@ export const searchDeezerTrack = async ({
       console.error(`Validation Error : ${error.issues}`)
       throw new Error(`Invalid Deezer API response: ${error.message}`)
     }
+
     throw error
   }
 }
@@ -62,6 +63,7 @@ export const fetchTopArtists = async () => {
       console.error(`Validation Error : ${error.issues}`)
       throw new Error(`Invalid Deezer API response: ${error.message}`)
     }
+
     throw error
   }
 }

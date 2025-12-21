@@ -15,7 +15,7 @@ const AlbumSchema = z.object({
   cover: z.string()
 })
 
-export const DeezerTrackSchema = z.object({
+const DeezerTrackSchema = z.object({
   id: z.number(),
   title: z.string(),
   artist: ArtistSchema,
