@@ -15,12 +15,18 @@ import * as types from './graphql';
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  query FetchArtistsQuery($count: Int!) {\n    fetchRandomArtists(count: $count) {\n      id\n      picture\n      name\n      biography\n      link\n      picture_xl\n      position\n    }\n  }\n": typeof types.FetchArtistsQueryDocument,
     "\n  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {\n    searchTrack(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": typeof types.SearchTrackQueryDocument,
 };
 const documents: Documents = {
+    "\n  query FetchArtistsQuery($count: Int!) {\n    fetchRandomArtists(count: $count) {\n      id\n      picture\n      name\n      biography\n      link\n      picture_xl\n      position\n    }\n  }\n": types.FetchArtistsQueryDocument,
     "\n  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {\n    searchTrack(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": types.SearchTrackQueryDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query FetchArtistsQuery($count: Int!) {\n    fetchRandomArtists(count: $count) {\n      id\n      picture\n      name\n      biography\n      link\n      picture_xl\n      position\n    }\n  }\n"): typeof import('./graphql').FetchArtistsQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
