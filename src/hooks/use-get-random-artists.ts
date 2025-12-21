@@ -1,8 +1,11 @@
 import { graphql } from "@/graphql"
+import { FetchRandomArtistsQueryQuery } from "@/graphql/graphql"
 import { useQuery } from "@tanstack/react-query"
 
-const FETCH_ARTISTS_QUERY = graphql(`
-  query FetchArtistsQuery($count: Int!) {
+type Artist = FetchRandomArtistsQueryQuery["fetchRandomArtists"][number]
+
+const FETCH_RANDOM_ARTISTS_QUERY = graphql(`
+  query FetchRandomArtistsQuery($count: Int!) {
     fetchRandomArtists(count: $count) {
       id
       picture
@@ -21,7 +24,7 @@ export const useGetRandomArtists = (count: number) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: FETCH_ARTISTS_QUERY.toString(),
+        query: FETCH_RANDOM_ARTISTS_QUERY.toString(),
         variables: { count }
       })
     })
@@ -33,7 +36,7 @@ export const useGetRandomArtists = (count: number) => {
     return json.data.fetchRandomArtists
   }
 
-  return useQuery({
+  return useQuery<Artist[], Error>({
     queryKey: ["artists", count],
     queryFn: fetchRandomArtists
   })

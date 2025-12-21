@@ -1,10 +1,11 @@
 import z from "zod"
 import { Loader2 } from "lucide-react"
-import { DefaultLayout } from "@/components/layout/default-layout"
-import { TrackTable } from "@/components/table/track/track-table"
 import { createFileRoute } from "@tanstack/react-router"
 import { useSearchTrack } from "@/hooks/use-search-tracks"
+import { DefaultLayout } from "@/components/layout/default-layout"
 import { columns } from "@/components/table/track/track-columns"
+import { TrackTable } from "@/components/table/track/track-table"
+import { Welcome } from "@/components/welcome"
 
 const searchSchema = z.object({
   query: z.string().optional(),
@@ -51,9 +52,7 @@ function App() {
   if (allTracks.length === 0) {
     return (
       <DefaultLayout>
-        <div className="text-center py-12 text-muted-foreground">
-          🎵 Search for tracks to get started
-        </div>
+        <Welcome />
       </DefaultLayout>
     )
   }

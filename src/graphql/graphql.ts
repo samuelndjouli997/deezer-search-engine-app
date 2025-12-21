@@ -65,12 +65,12 @@ export type Track = {
   type: Scalars['String']['output'];
 };
 
-export type FetchArtistsQueryQueryVariables = Exact<{
+export type FetchRandomArtistsQueryQueryVariables = Exact<{
   count: Scalars['Int']['input'];
 }>;
 
 
-export type FetchArtistsQueryQuery = { __typename?: 'Query', fetchRandomArtists: Array<{ __typename?: 'Artist', id: string, picture?: string | null, name: string, biography?: string | null, link?: string | null, picture_xl?: string | null, position?: number | null }> };
+export type FetchRandomArtistsQueryQuery = { __typename?: 'Query', fetchRandomArtists: Array<{ __typename?: 'Artist', id: string, picture?: string | null, name: string, biography?: string | null, link?: string | null, picture_xl?: string | null, position?: number | null }> };
 
 export type SearchTrackQueryQueryVariables = Exact<{
   query: Scalars['String']['input'];
@@ -100,8 +100,8 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
-export const FetchArtistsQueryDocument = new TypedDocumentString(`
-    query FetchArtistsQuery($count: Int!) {
+export const FetchRandomArtistsQueryDocument = new TypedDocumentString(`
+    query FetchRandomArtistsQuery($count: Int!) {
   fetchRandomArtists(count: $count) {
     id
     picture
@@ -112,7 +112,7 @@ export const FetchArtistsQueryDocument = new TypedDocumentString(`
     position
   }
 }
-    `) as unknown as TypedDocumentString<FetchArtistsQueryQuery, FetchArtistsQueryQueryVariables>;
+    `) as unknown as TypedDocumentString<FetchRandomArtistsQueryQuery, FetchRandomArtistsQueryQueryVariables>;
 export const SearchTrackQueryDocument = new TypedDocumentString(`
     query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {
   searchTrack(query: $query, limit: $limit, index: $index) {
