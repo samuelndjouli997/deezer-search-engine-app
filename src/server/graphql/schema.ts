@@ -4,6 +4,9 @@ export const typeDefs = `
     name: String!
     biography: String
     picture: String
+    picture_xl: String
+    link: String
+    position: Int
   }
 
   type Album {
@@ -26,5 +29,6 @@ export const typeDefs = `
     type Query {
         _health: String! 
         searchTrack(query: String!, limit: Int!, index: Int!): [Track!]!
+        fetchArtists(count: Int!):[Artist!]!
     }
 `
