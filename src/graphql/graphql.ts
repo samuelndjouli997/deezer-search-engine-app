@@ -26,14 +26,23 @@ export type Artist = {
   __typename?: 'Artist';
   biography?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  link?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   picture?: Maybe<Scalars['String']['output']>;
+  picture_xl?: Maybe<Scalars['String']['output']>;
+  position?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   _health: Scalars['String']['output'];
+  fetchRandomArtists: Array<Artist>;
   searchTrack: Array<Track>;
+};
+
+
+export type QueryFetchRandomArtistsArgs = {
+  count: Scalars['Int']['input'];
 };
 
 
@@ -55,6 +64,13 @@ export type Track = {
   title: Scalars['String']['output'];
   type: Scalars['String']['output'];
 };
+
+export type FetchArtistsQueryQueryVariables = Exact<{
+  count: Scalars['Int']['input'];
+}>;
+
+
+export type FetchArtistsQueryQuery = { __typename?: 'Query', fetchRandomArtists: Array<{ __typename?: 'Artist', id: string, picture?: string | null, name: string, biography?: string | null, link?: string | null, picture_xl?: string | null, position?: number | null }> };
 
 export type SearchTrackQueryQueryVariables = Exact<{
   query: Scalars['String']['input'];
@@ -84,6 +100,19 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const FetchArtistsQueryDocument = new TypedDocumentString(`
+    query FetchArtistsQuery($count: Int!) {
+  fetchRandomArtists(count: $count) {
+    id
+    picture
+    name
+    biography
+    link
+    picture_xl
+    position
+  }
+}
+    `) as unknown as TypedDocumentString<FetchArtistsQueryQuery, FetchArtistsQueryQueryVariables>;
 export const SearchTrackQueryDocument = new TypedDocumentString(`
     query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {
   searchTrack(query: $query, limit: $limit, index: $index) {
