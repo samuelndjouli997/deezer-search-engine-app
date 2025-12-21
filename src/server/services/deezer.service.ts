@@ -1,3 +1,4 @@
+import z from "zod"
 import {
   ChartArtistResponseSchema,
   DeezerSearchResponseSchema
@@ -31,7 +32,10 @@ export const searchDeezerTrack = async ({
 
     return parsedJson.data
   } catch (error) {
-    console.error(error)
+    if (error instanceof z.ZodError) {
+      console.error(`Validation Error : ${error.issues}`)
+      throw new Error(`Invalid Deezer API response: ${error.message}`)
+    }
     throw error
   }
 }
@@ -54,7 +58,10 @@ export const fetchTopArtists = async () => {
 
     return parsedJson.data
   } catch (error) {
-    console.error(error)
+    if (error instanceof z.ZodError) {
+      console.error(`Validation Error : ${error.issues}`)
+      throw new Error(`Invalid Deezer API response: ${error.message}`)
+    }
     throw error
   }
 }
