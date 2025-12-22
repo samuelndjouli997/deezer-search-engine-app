@@ -1,5 +1,6 @@
 import { buildSchema, graphql } from "graphql"
 import { createFileRoute } from "@tanstack/react-router"
+import { rateLimitMiddleware } from "@/middlewares/rate-limit.middleware"
 import { typeDefs } from "@/server/graphql/schema"
 import { resolvers } from "@/server/graphql/resolvers"
 
@@ -7,6 +8,7 @@ const schema = buildSchema(typeDefs)
 
 export const Route = createFileRoute("/api/graphql")({
   server: {
+    middleware: [rateLimitMiddleware],
     handlers: {
       POST: async ({ request }) => {
         const body = await request.json()
