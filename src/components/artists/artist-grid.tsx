@@ -1,52 +1,20 @@
-import { useEffect, useState } from "react"
 import { useGetRandomArtists } from "@/hooks/use-get-random-artists"
 import { Loader2 } from "lucide-react"
-import { useRateLimitedCallback } from "@tanstack/react-pacer"
 import { ArtistCard } from "@/components/artists/artist-card"
 import { Button } from "@/components/ui/button"
+import { useRateLimitedAction } from "@/hooks/use-rate-limited-action"
 
 export const ArtistGrid = () => {
-  const [countdown, setCountdown] = useState<number>(0)
-
   const { data, isLoading, error, refetch, isRefetching } =
     useGetRandomArtists(6)
 
-  const handleRefetch = useRateLimitedCallback(
-    () => {
-      refetch()
-    },
-    {
-      limit: 50,
-      window: 60 * 60 * 1000,
-      windowType: "sliding",
-      onReject: (rateLimiter) => {
-        const msUntilNext = rateLimiter.getMsUntilNextWindow()
-        const secondsUntilNext = Math.ceil(msUntilNext / 1000)
-
-        setCountdown(secondsUntilNext)
-
-        console.error("Patience !", {
-          description: `Attendez ${secondsUntilNext}s entre chaque shuffle.`
-        })
-      }
-    }
-  )
-
-  useEffect(() => {
-    if (countdown <= 0) return
-
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [countdown])
+  const {
+    execute: handleRefetch,
+    countdown,
+    isBlocked
+  } = useRateLimitedAction(() => refetch(), {
+    storageKey: "fetch-artist-key"
+  })
 
   if (isLoading) {
     return (
@@ -75,14 +43,14 @@ export const ArtistGrid = () => {
           role="button"
           className="text-center text-white font-semibold bg-purple-600 cursor-pointer"
           onClick={handleRefetch}
-          disabled={isRefetching || countdown > 0}
+          disabled={isRefetching || isBlocked}
         >
           {isRefetching ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </>
-          ) : countdown > 0 ? (
+          ) : isBlocked ? (
             `Wait ${countdown}s`
           ) : (
             "Discover others artists"
