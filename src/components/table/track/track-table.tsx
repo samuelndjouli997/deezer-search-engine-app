@@ -1,4 +1,4 @@
-import { ChevronDown, Loader2 } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 import {
   ColumnDef,
@@ -27,6 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { TrackTableSkeleton } from "@/components/table/track/track-table.skeleton"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { fuzzyFilter } from "@/utils/filter"
 
@@ -140,18 +141,18 @@ export const TrackTable = <TData, TValue>({
                     ))}
                   </TableRow>
                 ))}
+                {isFetchingNextPage && (
+                  <TrackTableSkeleton
+                    columnCount={columns.length}
+                    rowCount={6}
+                  />
+                )}
                 <TableRow ref={sentinelRef}>
                   <TableCell
                     colSpan={columns.length}
                     className="h-20 text-center"
                   >
-                    {isFetchingNextPage ? (
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
-                    ) : hasNextPage ? (
-                      <span className="text-xs text-muted-foreground">
-                        Loading more...
-                      </span>
-                    ) : (
+                    {!hasNextPage && (
                       <span className="text-sm text-muted-foreground">
                         No more results!
                       </span>

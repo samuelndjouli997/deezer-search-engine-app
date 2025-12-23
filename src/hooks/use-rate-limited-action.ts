@@ -51,6 +51,7 @@ export const useRateLimitedAction = (
         setCountdown(secondsUntilNext)
 
         const endTime = Date.now() + msUntilNext
+
         localStorage.setItem(storageKey, JSON.stringify({ endTime }))
 
         options?.onReject?.(secondsUntilNext)
