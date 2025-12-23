@@ -1,7 +1,8 @@
 import { useGetRandomArtists } from "@/hooks/use-get-random-artists"
 import { Loader2 } from "lucide-react"
-import { ArtistCard } from "@/components/artists/artist-card"
+import { ArtistCard } from "@/components/artists/artist.card"
 import { Button } from "@/components/ui/button"
+import { ArtistGridSkeleton } from "@/components/artists/artist-grid.skeleton"
 import { useRateLimitedAction } from "@/hooks/use-rate-limited-action"
 
 export const ArtistGrid = () => {
@@ -16,13 +17,7 @@ export const ArtistGrid = () => {
     storageKey: "fetch-artist-key"
   })
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    )
-  }
+  if (isLoading || isRefetching) return <ArtistGridSkeleton />
 
   if (error) {
     return (

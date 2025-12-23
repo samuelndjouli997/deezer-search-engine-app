@@ -1,16 +1,25 @@
 import z from "zod"
-import { Loader2 } from "lucide-react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useSearchTrack } from "@/hooks/use-search-tracks"
 import { DefaultLayout } from "@/components/layout/default-layout"
 import { columns } from "@/components/table/track/track-columns"
 import { TrackTable } from "@/components/table/track/track-table"
 import { Welcome } from "@/components/welcome"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const searchSchema = z.object({
   query: z.string().optional(),
   limit: z.number().optional()
 })
+
+const DatahPendingSkeleton = () => (
+  <DefaultLayout>
+    <div className="flex flex-col items-start justify-center gap-4">
+      <Skeleton className="h-10 w-20" />
+      <Skeleton className="h-[70vh] w-full" />
+    </div>
+  </DefaultLayout>
+)
 
 export const Route = createFileRoute("/")({
   validateSearch: searchSchema,
@@ -29,15 +38,7 @@ function App() {
 
   const allTracks = data?.pages.flat() ?? []
 
-  if (isLoading) {
-    return (
-      <DefaultLayout>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </DefaultLayout>
-    )
-  }
+  if (isLoading) return <DatahPendingSkeleton />
 
   if (error) {
     return (
