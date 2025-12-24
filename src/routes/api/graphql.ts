@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { rateLimitMiddleware } from "@/middlewares/rate-limit.middleware"
 import { typeDefs } from "@/server/graphql/schema"
 import { resolvers } from "@/server/graphql/resolvers"
+import { globalErrorHandler } from "@/utils/error/error-handler"
 
 const schema = buildSchema(typeDefs)
 
@@ -23,7 +24,14 @@ export const Route = createFileRoute("/api/graphql")({
 
           return Response.json(result)
         } catch (error) {
-          return new Response("Invalid JSON body.", { status: 400 })
+          const { status, code, message } = globalErrorHandler(error)
+
+          return Response.json(
+            {
+              errors: [{ message, extensions: { code } }]
+            },
+            { status }
+          )
         }
       }
     }
