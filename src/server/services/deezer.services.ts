@@ -1,8 +1,8 @@
-import z from "zod"
 import {
   ChartArtistResponseSchema,
   DeezerSearchResponseSchema
 } from "@/server/parsers"
+import { globalErrorHandler } from "@/utils/error/error-handler"
 
 type SearchDeezerTrackProps = {
   query: string
@@ -32,12 +32,9 @@ export const searchDeezerTrack = async ({
 
     return parsedJson.data
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      console.error(`Validation Error : ${error.issues}`)
-      throw new Error(`Invalid Deezer API response: ${error.message}`)
-    }
+    const customError = globalErrorHandler(error, { log: true })
 
-    throw error
+    throw customError
   }
 }
 
@@ -59,11 +56,8 @@ export const fetchTopArtists = async () => {
 
     return parsedJson.data
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      console.error(`Validation Error : ${error.issues}`)
-      throw new Error(`Invalid Deezer API response: ${error.message}`)
-    }
+    const customError = globalErrorHandler(error, { log: true })
 
-    throw error
+    throw customError
   }
 }
