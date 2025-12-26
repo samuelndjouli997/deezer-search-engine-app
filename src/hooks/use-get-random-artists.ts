@@ -1,5 +1,6 @@
 import { graphql } from "@/graphql"
 import { FetchRandomArtistsQueryQuery } from "@/graphql/graphql"
+import { fetchGraphQL } from "@/utils/graphql"
 import { useQuery } from "@tanstack/react-query"
 
 type Artist = FetchRandomArtistsQueryQuery["fetchRandomArtists"][number]
@@ -19,25 +20,26 @@ const FETCH_RANDOM_ARTISTS_QUERY = graphql(`
 `)
 
 export const useGetRandomArtists = (count: number) => {
-  const fetchRandomArtists = async () => {
-    const response = await fetch("/api/graphql", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: FETCH_RANDOM_ARTISTS_QUERY.toString(),
-        variables: { count }
-      })
-    })
-
-    const json = await response.json()
-
-    if (json.errors) throw new Error(json.errors[0].message)
-
-    return json.data.fetchRandomArtists
-  }
-
-  return useQuery<Artist[], Error>({
+  const query = useQuery<Artist[], Error>({
     queryKey: ["artists", count],
-    queryFn: fetchRandomArtists
+    queryFn: async () => {
+      const data = await fetchGraphQL<FetchRandomArtistsQueryQuery>(
+        FETCH_RANDOM_ARTISTS_QUERY.toString(),
+        { count }
+      )
+      return data.fetchRandomArtists
+    },
+    retry: false
   })
+
+  const hasRetryAfter = query.error && "retryAfter" in query.error
+
+  const retryAfter = hasRetryAfter
+    ? (query.error as Error & { retryAfter: number }).retryAfter
+    : undefined
+
+  return {
+    ...query,
+    retryAfter
+  }
 }
