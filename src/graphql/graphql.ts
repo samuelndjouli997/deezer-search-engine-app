@@ -19,7 +19,7 @@ export type Scalars = {
 export type Album = {
   __typename?: 'Album';
   cover?: Maybe<Scalars['String']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
 };
 
 export type Artist = {
@@ -56,11 +56,11 @@ export type Track = {
   __typename?: 'Track';
   album: Album;
   artist: Artist;
-  duration?: Maybe<Scalars['Int']['output']>;
+  duration: Scalars['Int']['output'];
   explicit_lyrics?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['ID']['output'];
   preview?: Maybe<Scalars['String']['output']>;
-  rank?: Maybe<Scalars['Int']['output']>;
+  rank: Scalars['Int']['output'];
   title: Scalars['String']['output'];
   type: Scalars['String']['output'];
 };
@@ -79,7 +79,7 @@ export type SearchTrackQueryQueryVariables = Exact<{
 }>;
 
 
-export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration?: number | null, rank?: number | null, explicit_lyrics?: boolean | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title?: string | null, cover?: string | null } }> };
+export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration: number, rank: number, explicit_lyrics?: boolean | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title: string, cover?: string | null } }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
