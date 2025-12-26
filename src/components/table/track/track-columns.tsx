@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 import { ColumnDef } from "@tanstack/react-table"
 import { SearchTrackQueryQuery } from "@/graphql/graphql"
 import { truncateStr } from "@/utils/string"
+import { formatSecondsToTime } from "@/utils/number"
 
 export type TrackFromQuery = SearchTrackQueryQuery["searchTrack"][number]
 
@@ -95,7 +96,9 @@ export const columns: ColumnDef<TrackFromQuery>[] = [
     id: "duration",
     accessorKey: "duration",
     header: "Duration",
-    cell: ({ row }) => <span>{row.original.duration}</span>,
+    cell: ({ row }) => (
+      <span>{formatSecondsToTime(row.original.duration)}</span>
+    ),
     enableSorting: true
   },
   {

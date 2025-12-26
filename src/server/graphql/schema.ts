@@ -10,7 +10,7 @@ export const typeDefs = `
   }
 
   type Album {
-    title: String
+    title: String!
     cover: String
   }
 
@@ -19,11 +19,11 @@ export const typeDefs = `
     title: String!
     artist: Artist!
     album: Album!
-    duration: Int
+    duration: Int!
     explicit_lyrics: Boolean
     type: String!
     preview: String
-    rank: Int
+    rank: Int!
   }
 
     type Query {
