@@ -1,29 +1,23 @@
-import { useGetRandomArtists } from "@/hooks/use-get-random-artists"
 import { Loader2 } from "lucide-react"
 import { ArtistCard } from "@/components/artists/artist.card"
+import { ErrorComponent } from "@/components/error-component"
 import { Button } from "@/components/ui/button"
 import { ArtistGridSkeleton } from "@/components/artists/artist-grid.skeleton"
-import { useRateLimitedAction } from "@/hooks/use-rate-limited-action"
+import { useGetRandomArtists } from "@/hooks/use-get-random-artists"
 
 export const ArtistGrid = () => {
-  const { data, isLoading, error, refetch, isRefetching } =
+  const { data, isLoading, error, refetch, isRefetching, isError, retryAfter } =
     useGetRandomArtists(6)
-
-  const {
-    execute: handleRefetch,
-    countdown,
-    isBlocked
-  } = useRateLimitedAction(() => refetch(), {
-    storageKey: "fetch-artist-key"
-  })
 
   if (isLoading || isRefetching) return <ArtistGridSkeleton />
 
-  if (error) {
+  if (isError) {
     return (
-      <div className="text-center py-12 text-red-500">
-        Error: {error.message}
-      </div>
+      <ErrorComponent
+        error={error}
+        retryAfter={retryAfter}
+        onRetry={() => refetch()}
+      />
     )
   }
 
@@ -37,16 +31,14 @@ export const ArtistGrid = () => {
         <Button
           role="button"
           className="text-center text-white font-semibold bg-purple-600 cursor-pointer"
-          onClick={handleRefetch}
-          disabled={isRefetching || isBlocked}
+          onClick={() => refetch()}
+          disabled={isRefetching}
         >
           {isRefetching ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </>
-          ) : isBlocked ? (
-            `Wait ${countdown}s`
           ) : (
             "Discover others artists"
           )}

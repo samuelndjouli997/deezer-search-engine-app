@@ -6,6 +6,7 @@ import { columns } from "@/components/table/track/track-columns"
 import { TrackTable } from "@/components/table/track/track-table"
 import { Welcome } from "@/components/welcome"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ErrorComponent } from "@/components/error-component"
 
 const searchSchema = z.object({
   query: z.string().optional(),
@@ -33,19 +34,24 @@ function App() {
     error,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch,
+    isError,
+    retryAfter
   } = useSearchTrack()
 
   const allTracks = data?.pages.flat() ?? []
 
   if (isLoading) return <DatahPendingSkeleton />
 
-  if (error) {
+  if (isError) {
     return (
       <DefaultLayout>
-        <div className="text-center py-12 text-red-500">
-          Error: {error.message}
-        </div>
+        <ErrorComponent
+          error={error}
+          retryAfter={retryAfter}
+          onRetry={() => refetch()}
+        />
       </DefaultLayout>
     )
   }
