@@ -38,6 +38,7 @@ export type Query = {
   _health: Scalars['String']['output'];
   fetchRandomArtists: Array<Artist>;
   searchTrack: Array<Track>;
+  searchTrackWithBiography: Array<Track>;
 };
 
 
@@ -47,6 +48,13 @@ export type QueryFetchRandomArtistsArgs = {
 
 
 export type QuerySearchTrackArgs = {
+  index: Scalars['Int']['input'];
+  limit: Scalars['Int']['input'];
+  query: Scalars['String']['input'];
+};
+
+
+export type QuerySearchTrackWithBiographyArgs = {
   index: Scalars['Int']['input'];
   limit: Scalars['Int']['input'];
   query: Scalars['String']['input'];

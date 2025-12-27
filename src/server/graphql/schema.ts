@@ -29,6 +29,7 @@ export const typeDefs = `
     type Query {
         _health: String! 
         searchTrack(query: String!, limit: Int!, index: Int!): [Track!]!
+        searchTrackWithBiography(query: String!, limit: Int!, index: Int!): [Track!]!
         fetchRandomArtists(count: Int!):[Artist!]!
     }
 `
