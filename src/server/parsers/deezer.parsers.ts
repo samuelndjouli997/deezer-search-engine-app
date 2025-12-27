@@ -4,7 +4,6 @@ const ArtistSchema = z.object({
   id: z.number(),
   picture: z.string(),
   name: z.string(),
-  biography: z.string().optional(),
   link: z.string().optional(),
   picture_xl: z.string().optional(),
   position: z.number().optional()

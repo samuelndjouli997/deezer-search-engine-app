@@ -1,10 +1,12 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 import { ColumnDef } from "@tanstack/react-table"
-import { SearchTrackQueryQuery } from "@/graphql/graphql"
+import { SearchTrackWithBiographyQueryQuery } from "@/graphql/graphql"
 import { truncateStr } from "@/utils/string"
 import { formatSecondsToTime } from "@/utils/number"
+import { ArtistBiography } from "@/components/artists/artist-biography"
 
-export type TrackFromQuery = SearchTrackQueryQuery["searchTrack"][number]
+export type TrackFromQuery =
+  SearchTrackWithBiographyQueryQuery["searchTrackWithBiography"][number]
 
 export const columns: ColumnDef<TrackFromQuery>[] = [
   {
@@ -64,7 +66,13 @@ export const columns: ColumnDef<TrackFromQuery>[] = [
         )}
       </button>
     ),
-    cell: ({ row }) => <span>{truncateStr(row.original.artist.name, 35)}</span>,
+    cell: ({ row }) => {
+      const { name, biography, picture } = row.original.artist
+
+      return (
+        <ArtistBiography name={name} picture={picture} biography={biography} />
+      )
+    },
     enableSorting: true
   },
   {

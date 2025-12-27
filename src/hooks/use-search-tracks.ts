@@ -1,12 +1,16 @@
 import { graphql } from "@/graphql"
-import { SearchTrackQueryQuery } from "@/graphql/graphql"
+import { SearchTrackWithBiographyQueryQuery } from "@/graphql/graphql"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useSearch } from "@tanstack/react-router"
 import { fetchGraphQL } from "@/utils/graphql"
 
-const SEARCH_TRACKS_QUERY = graphql(`
-  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {
-    searchTrack(query: $query, limit: $limit, index: $index) {
+const SEARCH_TRACKS_WITH_BIOGRAPHY_QUERY = graphql(`
+  query SearchTrackWithBiographyQuery(
+    $query: String!
+    $limit: Int!
+    $index: Int!
+  ) {
+    searchTrackWithBiography(query: $query, limit: $limit, index: $index) {
       id
       title
       duration
@@ -15,6 +19,8 @@ const SEARCH_TRACKS_QUERY = graphql(`
       artist {
         id
         name
+        biography
+        picture
       }
       album {
         title
@@ -30,15 +36,15 @@ export const useSearchTrack = () => {
   const query = useInfiniteQuery({
     queryKey: ["tracks", search.query, search.limit],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const data = await fetchGraphQL<SearchTrackQueryQuery>(
-        SEARCH_TRACKS_QUERY.toString(),
+      const data = await fetchGraphQL<SearchTrackWithBiographyQueryQuery>(
+        SEARCH_TRACKS_WITH_BIOGRAPHY_QUERY.toString(),
         {
           query: search.query ?? "",
           limit: search.limit ?? 10,
           index: pageParam
         }
       )
-      return data.searchTrack
+      return data.searchTrackWithBiography
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, _, lastPageParam) => {

@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react"
-import { ArtistCard } from "@/components/artists/artist.card"
+import { ArtistCard } from "@/components/artists/artist-card"
 import { ErrorComponent } from "@/components/error-component"
 import { Button } from "@/components/ui/button"
 import { ArtistGridSkeleton } from "@/components/artists/artist-grid.skeleton"
