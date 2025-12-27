@@ -5,12 +5,13 @@ import {
 import { globalErrorHandler } from "@/utils/error/error-handler"
 
 const DISCOGS_API = import.meta.env.VITE_DISCOGS_API
-const DISCOGS_ACCESS_TOKEN = import.meta.env.VITE_DISCOGS_ACCESS_TOKEN
+const DISCOGS_KEY = import.meta.env.VITE_DISCOGS_API_KEY
+const DISCOGS_SECRET = import.meta.env.VITE_DISCOGS_API_SECRET
 
 export const searchDiscogsArtist = async (artistName: string) => {
   try {
     const response = await fetch(
-      `${DISCOGS_API}/database/search?q=${encodeURIComponent(artistName)}&type=artist&token=${DISCOGS_ACCESS_TOKEN}`,
+      `${DISCOGS_API}/database/search?q=${encodeURIComponent(artistName)}&type=artist&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`,
       { headers: { "User-Agent": "DeezerSearchApp/1.0" } }
     )
 
@@ -33,7 +34,7 @@ export const searchDiscogsArtist = async (artistName: string) => {
 export const fetchDiscogsArtistDetails = async (artistId: number) => {
   try {
     const response = await fetch(
-      `${DISCOGS_API}/artists/${artistId}?token=${DISCOGS_ACCESS_TOKEN}`,
+      `${DISCOGS_API}/artists/${artistId}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`,
       { headers: { "User-Agent": "DeezerSearchApp/1.0" } }
     )
 
