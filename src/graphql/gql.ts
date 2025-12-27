@@ -16,11 +16,11 @@ import * as types from './graphql';
  */
 type Documents = {
     "\n  query FetchRandomArtistsQuery($count: Int!) {\n    fetchRandomArtists(count: $count) {\n      id\n      picture\n      name\n      biography\n      link\n      picture_xl\n      position\n    }\n  }\n": typeof types.FetchRandomArtistsQueryDocument,
-    "\n  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {\n    searchTrack(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": typeof types.SearchTrackQueryDocument,
+    "\n  query SearchTrackWithBiographyQuery(\n    $query: String!\n    $limit: Int!\n    $index: Int!\n  ) {\n    searchTrackWithBiography(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n        biography\n        picture\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": typeof types.SearchTrackWithBiographyQueryDocument,
 };
 const documents: Documents = {
     "\n  query FetchRandomArtistsQuery($count: Int!) {\n    fetchRandomArtists(count: $count) {\n      id\n      picture\n      name\n      biography\n      link\n      picture_xl\n      position\n    }\n  }\n": types.FetchRandomArtistsQueryDocument,
-    "\n  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {\n    searchTrack(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": types.SearchTrackQueryDocument,
+    "\n  query SearchTrackWithBiographyQuery(\n    $query: String!\n    $limit: Int!\n    $index: Int!\n  ) {\n    searchTrackWithBiography(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n        biography\n        picture\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n": types.SearchTrackWithBiographyQueryDocument,
 };
 
 /**
@@ -30,7 +30,7 @@ export function graphql(source: "\n  query FetchRandomArtistsQuery($count: Int!)
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {\n    searchTrack(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n"): typeof import('./graphql').SearchTrackQueryDocument;
+export function graphql(source: "\n  query SearchTrackWithBiographyQuery(\n    $query: String!\n    $limit: Int!\n    $index: Int!\n  ) {\n    searchTrackWithBiography(query: $query, limit: $limit, index: $index) {\n      id\n      title\n      duration\n      rank\n      explicit_lyrics\n      artist {\n        id\n        name\n        biography\n        picture\n      }\n      album {\n        title\n        cover\n      }\n    }\n  }\n"): typeof import('./graphql').SearchTrackWithBiographyQueryDocument;
 
 
 export function graphql(source: string) {

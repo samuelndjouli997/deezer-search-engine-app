@@ -24,11 +24,11 @@ export type Album = {
 
 export type Artist = {
   __typename?: 'Artist';
-  biography?: Maybe<Scalars['String']['output']>;
+  biography: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   link?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
-  picture?: Maybe<Scalars['String']['output']>;
+  picture: Scalars['String']['output'];
   picture_xl?: Maybe<Scalars['String']['output']>;
   position?: Maybe<Scalars['Int']['output']>;
 };
@@ -78,16 +78,16 @@ export type FetchRandomArtistsQueryQueryVariables = Exact<{
 }>;
 
 
-export type FetchRandomArtistsQueryQuery = { __typename?: 'Query', fetchRandomArtists: Array<{ __typename?: 'Artist', id: string, picture?: string | null, name: string, biography?: string | null, link?: string | null, picture_xl?: string | null, position?: number | null }> };
+export type FetchRandomArtistsQueryQuery = { __typename?: 'Query', fetchRandomArtists: Array<{ __typename?: 'Artist', id: string, picture: string, name: string, biography: string, link?: string | null, picture_xl?: string | null, position?: number | null }> };
 
-export type SearchTrackQueryQueryVariables = Exact<{
+export type SearchTrackWithBiographyQueryQueryVariables = Exact<{
   query: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
   index: Scalars['Int']['input'];
 }>;
 
 
-export type SearchTrackQueryQuery = { __typename?: 'Query', searchTrack: Array<{ __typename?: 'Track', id: string, title: string, duration: number, rank: number, explicit_lyrics?: boolean | null, artist: { __typename?: 'Artist', id: string, name: string }, album: { __typename?: 'Album', title: string, cover?: string | null } }> };
+export type SearchTrackWithBiographyQueryQuery = { __typename?: 'Query', searchTrackWithBiography: Array<{ __typename?: 'Track', id: string, title: string, duration: number, rank: number, explicit_lyrics?: boolean | null, artist: { __typename?: 'Artist', id: string, name: string, biography: string, picture: string }, album: { __typename?: 'Album', title: string, cover?: string | null } }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -121,9 +121,9 @@ export const FetchRandomArtistsQueryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<FetchRandomArtistsQueryQuery, FetchRandomArtistsQueryQueryVariables>;
-export const SearchTrackQueryDocument = new TypedDocumentString(`
-    query SearchTrackQuery($query: String!, $limit: Int!, $index: Int!) {
-  searchTrack(query: $query, limit: $limit, index: $index) {
+export const SearchTrackWithBiographyQueryDocument = new TypedDocumentString(`
+    query SearchTrackWithBiographyQuery($query: String!, $limit: Int!, $index: Int!) {
+  searchTrackWithBiography(query: $query, limit: $limit, index: $index) {
     id
     title
     duration
@@ -132,6 +132,8 @@ export const SearchTrackQueryDocument = new TypedDocumentString(`
     artist {
       id
       name
+      biography
+      picture
     }
     album {
       title
@@ -139,4 +141,4 @@ export const SearchTrackQueryDocument = new TypedDocumentString(`
     }
   }
 }
-    `) as unknown as TypedDocumentString<SearchTrackQueryQuery, SearchTrackQueryQueryVariables>;
+    `) as unknown as TypedDocumentString<SearchTrackWithBiographyQueryQuery, SearchTrackWithBiographyQueryQueryVariables>;

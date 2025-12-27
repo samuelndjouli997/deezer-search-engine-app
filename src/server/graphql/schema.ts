@@ -2,8 +2,8 @@ export const typeDefs = `
   type Artist {
     id: ID!
     name: String!
-    biography: String
-    picture: String
+    biography: String!
+    picture: String!
     picture_xl: String
     link: String
     position: Int
