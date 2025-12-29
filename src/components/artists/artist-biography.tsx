@@ -17,7 +17,7 @@ export const ArtistBiography = ({ name, biography, picture }: Props) => (
     <SheetTrigger asChild>
       <span className="underline cursor-pointer">{name}</span>
     </SheetTrigger>
-    <SheetContent className="px-6">
+    <SheetContent className="px-6 overflow-y-scroll pb-6">
       <SheetHeader className="px-0 pb-0">
         <SheetTitle className="text-lg">{name} biography</SheetTitle>
       </SheetHeader>
