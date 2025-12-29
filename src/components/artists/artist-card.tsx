@@ -13,7 +13,9 @@ export const ArtistCard = ({ artist }: Props) => (
       />
     </div>
     <Link to={artist.link ?? "https://deezer.com"} target="_blank">
-      <span className="text-base">{artist.name}</span>
+      <span className="text-base font-semibold hover:underline">
+        {artist.name}
+      </span>
     </Link>
   </div>
 )
