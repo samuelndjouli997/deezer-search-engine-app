@@ -7,23 +7,31 @@ type Args = {
   index: number
 }
 
+const biographyCache = new Map<string, string>()
+
 export const discogsResolvers = {
   searchTrackWithBiography: async ({ query, limit, index }: Args) => {
     const tracks = await searchDeezerTrack({ query, limit, index })
 
     const tracksWithBiography = await Promise.all(
       tracks.map(async (track) => {
-        const biography = await getArtistBiography(track.artist.name)
+        const artistName = track.artist.name.toLowerCase()
 
-        const cleanedBiography = biography
-          ? discogsBiographyCodeToHTML(biography)
-          : "Biography not available"
+        if (!biographyCache.has(artistName)) {
+          const biography = await getArtistBiography(artistName)
+
+          const cleanedBiography = biography
+            ? discogsBiographyCodeToHTML(biography)
+            : "Biography not available"
+
+          biographyCache.set(artistName, cleanedBiography)
+        }
 
         return {
           ...track,
           artist: {
             ...track.artist,
-            biography: cleanedBiography
+            biography: biographyCache.get(artistName)!
           }
         }
       })
