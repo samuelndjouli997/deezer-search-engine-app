@@ -23,9 +23,15 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "TanStack Start Starter" }
+      {
+        title: "Deezer Search Engine App",
+        desc: "Search tracks, albums, artists and much more"
+      }
     ],
-    links: [{ rel: "stylesheet", href: appCss }]
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/deezer-favicon.png" }
+    ]
   }),
   shellComponent: RootDocument
 })
