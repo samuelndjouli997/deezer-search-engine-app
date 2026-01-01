@@ -7,13 +7,18 @@ import { nitro } from "nitro/vite"
 
 const config = defineConfig({
   plugins: [
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ["./tsconfig.json"]
     }),
     tailwindcss(),
     tanstackStart(),
-    nitro({ preset: "vercel" }),
+    nitro({
+      preset: "vercel",
+      externals: {
+        inline: ["graphql"],
+        traceInclude: ["graphql"]
+      }
+    }),
     viteReact()
   ]
 })
