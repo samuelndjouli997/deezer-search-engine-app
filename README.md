@@ -1,310 +1,244 @@
-Welcome to your new TanStack app! 
+# Deezer Music Search Engine
 
-# Getting Started
+A modern music search application that combines Deezer’s music catalog with enriched artist biographies from Discogs.
 
-To run this application:
+[![TanStack Start](https://img.shields.io/badge/TanStack%20Start-ff7f00?logo=tanstack&style=flat)](#) [![ReactJS](https://img.shields.io/badge/-ReactJs-61DAFB?logo=react&logoColor=white&style=flat)](#) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff&style=flat)](#) [![GraphQL](https://img.shields.io/badge/GraphQl-E10098?logo=graphql&logoColor=white&style=flat)](#) [![Shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff&style=flat)](#)
+
+![Project Overview](/public/screenshots/project-overview.png)
+
+## Table of contents
+
+- [Overview](#overview)
+- [What problem it solves](#what-problem-it-solves)
+- [How it works](#how-it-works)
+- [Key features](#key-features)
+  - [Music search & Data display](#music-search-and-data-display)
+  - [Artist discovery](#artist-biography-discovery)
+  - [Performance optimizations](#performance-optimizations)
+  - [Rate limiting and resiliency](#rate-limiting-and-resiliency)
+  - [UI/UX](#uiux)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Important notes and attention points](#important-notes-and-attention-points)
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [API keys](#api-keys)
+  - [Environment variables](#environment-variables)
+  - [Install](#install)
+  - [Run](#run)
+- [Scripts](#scripts)
+- [Testing the API](#testing-the-api)
+
+---
+
+## Overview
+
+This application provides a smooth music discovery experience by searching Deezer API's tracks, albums, or artists and enriching artist data with biographies from Discogs API.
+Results are displayed in an interactive, sortable table with infinite scroll, and artist biographies are shown in a dedicated side panel.
+
+## What problem it solves
+
+Deezer is excellent for catalog search but does not always provide rich editorial content for artists. Discogs often includes detailed artist biographies and metadata.
+This project merges both sources into one UI: fast search on Deezer, richer context from Discogs.
+
+## How it works
+
+1. The client queries a GraphQL endpoint.
+2. GraphQL resolvers fetch data from Deezer (tracks, artists, albums).
+3. For biography enrichment:
+   - The server checks an in-memory cache (Map) keyed by normalized artist name.
+   - On cache miss, the server calls the Discogs API, converts BBCode to HTML, sanitizes output, then caches the result.
+4. The UI renders:
+   - A sortable table for tracks (with infinite scroll).
+   - A side panel for biography previews.
+
+---
+
+## Key features
+
+### Music search and data display
+
+![Search results table](/public/screenshots/search-table.png)
+
+- Real-time search across Deezer’s catalog
+- Infinite scroll for continuous browsing
+- Track details: title, artist, album, duration, rank, explicit flag
+- Sortable table with multiple columns (title, artist, album, duration, rank)
+- Album cover previews inside table rows
+- Skeleton loaders for improved perceived performance
+- Responsive behavior for mobile and desktop
+
+### Artist biography discovery
+
+![Search results table](/public/screenshots/artist-biography.png)
+
+- Random artist shuffle on the homepage
+- Artist cards with images
+- Biography preview in a side panel
+- Discogs biographies are converted from BBCode to HTML
+- Clickable links to Discogs profiles (when applicable)
+- Sanitized HTML rendering to prevent XSS (DOMPurify)
+
+### Performance optimizations
+
+![Search results loader](/public/screenshots/search-table-loader.png)
+
+- In-memory biography cache (Map-based)
+  - Strongly reduces Discogs calls for repeated artists
+  - Instant retrieval for cache hits
+- Query caching via TanStack Query
+
+### Rate limiting
+
+![Rate limit error](/public/screenshots/rate-limit-error.png)
+
+- Server-side rate limiting (sliding window)
+- Visual countdown when the limit is reached
+- Typed, source-specific error handling (Deezer, Discogs, GraphQL, Zod)
+
+### UI/UX
+
+- Dark mode support
+- Smooth transitions and modern UI components (Radix + shadcn/ui)
+
+---
+
+## Tech stack
+
+| Category      | Technology             | Usage                                       |
+| ------------- | ---------------------- | ------------------------------------------- |
+| Framework     | TanStack Start         | Full-stack React framework with SSR support |
+| UI            | React 19               | UI rendering                                |
+| Language      | TypeScript             | Type safety across client/server            |
+| API Layer     | GraphQL                | Custom schema + resolvers                   |
+| Data Fetching | TanStack Query         | Server-state caching, infinite queries      |
+| Routing       | TanStack Router        | Type-safe routing with search params        |
+| Deboucing     | TanStack Pacer         | Deboucing on search input                   |
+| Styling       | Tailwind CSS           | Utility-first styling                       |
+| UI Components | shadcn/ui + Radix UI   | Accessible component building blocks        |
+| Icons         | lucide-react           | Icon set                                    |
+| Validation    | Zod                    | Runtime schema validation for API responses |
+| Security      | DOMPurify              | Sanitizing HTML from Discogs content        |
+| Rate limiting | Sliding window limiter | Per-IP throttling on server                 |
+| Cache         | In-memory Map          | Biography cache to reduce Discogs requests  |
+| External APIs | Deezer API             | Tracks, albums, artists data                |
+| External APIs | Discogs API            | Artist biographies and metadata             |
+
+---
+
+## Project structure
+
+```txt
+src/
+├── components/
+│   ├── artists/
+│   ├── layout/
+│   ├── table/
+│   ├── ui/
+│   └── error-component.tsx
+├── hooks/
+├── server/
+│   ├── graphql/
+│   ├── parsers/
+│   └── services/
+├── routes/
+│   ├── __root.tsx
+│   ├── index.tsx
+│   └── api/graphql.ts
+├── utils/
+│   ├── error/
+│   ├── graphql.ts
+│   ├── number.ts
+│   ├── string.ts
+│   └── rate-limit.ts
+├── middlewares/
+├── constants/
+└── types/
+```
+
+## Important notes and attention points
+
+### API rate limits
+
+The app currently enforces a server-side rate limit of 50 requests per hour per IP.
+
+Discogs has its own constraints and may be more restrictive than your server limit.
+
+This matters because biography enrichment can generate additional calls compared to Deezer-only search.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js >= 18
+- pnpm >= 8 (recommended)
+
+### API keys
+
+You need Discogs credentials:
+
+1. Create an application in your Discogs developer settings
+2. Retrieve your Consumer Key and Consumer Secret
+
+### Environment variables
+
+Create a `.env` file at the project root:
+
+```env
+VITE_DEEZER_API="deezer_api_here"
+VITE_DISCOGS_API="discogs_api_here"
+VITE_DISCOGS_API_KEY="your_consumer_key_here"
+VITE_DISCOGS_API_SECRET="your_consumer_secret_here"
+```
+
+### Install
 
 ```bash
 pnpm install
-pnpm start
 ```
 
-# Building For Production
-
-To build this application for production:
+### Run
 
 ```bash
-pnpm build
+pnpm run dev
 ```
 
-## Testing
+The app runs at:
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+```txt
+http://localhost:3000
+```
+
+### Scripts
 
 ```bash
-pnpm test
+pnpm dev        # Start development server
+pnpm build      # Build for production
+pnpm preview    # Preview production build
+pnpm lint       # Lint codebase
+
+npx graphql-codegen --config codegen.ts  # Generate GraphQL types
 ```
 
-## Styling
+## Testing the API
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+Use any GraphQL client (Postman, Insomnia, etc.):
 
+- URL: `http://localhost:3000/api/graphql`
+- Method: POST
 
-## Linting & Formatting
+Example of a query to add to the request:
 
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-pnpm lint
-pnpm format
-pnpm check
-```
-
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpx shadcn@latest add button
-```
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
+```graphql
+query {
+  searchTrackWithBiography(query: "daft punk", limit: 5, index: 0) {
+    title
+    artist {
+      name
+      biography
+    }
+  }
 }
 ```
 
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-pnpm add @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+**Enjoy!**
