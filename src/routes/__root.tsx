@@ -37,6 +37,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const showDevTools = import.meta.env.DEV && !import.meta.env.SSR
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
@@ -47,18 +49,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ThemeProvider defaultTheme="system" storageKey="ui-theme">
           {children}
         </ThemeProvider>
-        <TanStackDevtools
-          config={{
-            position: "bottom-right"
-          }}
-          plugins={[
-            {
-              name: "Tanstack Router",
-              render: <TanStackRouterDevtoolsPanel />
-            },
-            TanStackQueryDevtools
-          ]}
-        />
+        {showDevTools ? (
+          <TanStackDevtools
+            config={{
+              position: "bottom-right"
+            }}
+            plugins={[
+              {
+                name: "Tanstack Router",
+                render: <TanStackRouterDevtoolsPanel />
+              },
+              TanStackQueryDevtools
+            ]}
+          />
+        ) : null}
         <Scripts />
       </body>
     </html>
